@@ -1,0 +1,11 @@
+{
+  "name": "restroom-finder2",
+  "version": "1.0.0",
+  "description": "An application for users to find and share nearby public restroom information",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "export NODE_ENV=test && jasmine"
+  },
+  "author": "Azumi",
+  "license": "ISC"
+}
