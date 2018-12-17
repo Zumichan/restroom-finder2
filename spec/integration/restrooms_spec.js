@@ -53,4 +53,31 @@ describe("routes : restrooms", () => {
     })
   })
 
+  describe("POST /restrooms/create", () => {
+      const options = {
+        url: `${base}create`,
+        form: {
+          title: "Ghirardelli Square",
+          address: "North Point St, San Francisco, CA"
+        }
+      };
+
+      it("should create a new restroom information and redirect", (done) => {
+        request.post(options,(err, res, body) => {
+            Restroom.findOne({where: {title: "Ghirardelli Square"}})
+            .then((restroom) => {
+              expect(res.statusCode).toBe(303);
+              expect(restroom.title).toBe("Ghirardelli Square");
+              expect(restroom.address).toBe("North Point St, San Francisco, CA");
+              done();
+            })
+            .catch((err) => {
+              console.log(err);
+              done();
+            });
+          }
+        );
+      });
+    });
+
 });

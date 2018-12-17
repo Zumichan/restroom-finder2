@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include ../static/partials/head.ejs %>
+  </head>
+  <body>
+    <% include ../static/partials/navbar.ejs %>
+
+    <main class="container">
+
+      <h1>New Restroom Information</h1>
+
+      <form action="/restrooms/create" method="post">
+        <div class="form-group">
+          <label for="title">Location Name</label>
+          <input type="text" class="form-control" name="title" aria-describedby="titleHelp" placeholder="Enter Location Name">
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <textarea rows="2" class="form-control" name="address" placeholder="Enter address"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="title">Gender:</label>
+          <input type="checkbox" name="Gender" value="Male"> Male
+          <input type="checkbox" name="Gender" value="Female"> Female
+          <input type="checkbox" name="Gender" value="All Gender"> All Gender
+        </div>
+        <div class="form-group">
+          <label for="title">Accessibility:</label>
+          <input type="checkbox" name="Accessibility" value="Wheelchair"> Wheelchair
+          <input type="checkbox" name="Accessibility" value="Stroller"> Stroller
+        </div>
+        <div class="form-group">
+          <label for="title">Facility:</label>
+          <input type="checkbox" name="Facility" value="Sink"> Sink
+          <input type="checkbox" name="Facility" value="Diaper Changing Table"> Diaper Changing Table
+          <input type="checkbox" name="Facility" value="Drinking Fountain"> Drinking Fountain
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+
+    </main>
+
+    <% include ../static/partials/baseScripts.ejs %>
+
+  </body>
+</html>

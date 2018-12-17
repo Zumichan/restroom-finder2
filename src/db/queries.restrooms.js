@@ -9,5 +9,17 @@ module.exports = {
     .catch((err) => {
       callback(err);
     })
+  },
+  addRestroom(newRestroom, callback){
+    return Restroom.create({
+      title: newRestroom.title,
+      address: newRestroom.address
+    })
+    .then((restroom) => {
+      callback(null, restroom);
+    })
+    .catch((err) => {
+      callback(err);
+    })
   }
 }
