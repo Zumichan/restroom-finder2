@@ -43,4 +43,14 @@ describe("routes : restrooms", () => {
     });
   });
 
+  describe("GET /restrooms/new", () => {
+    it("should render a new restroom information page", (done) => {
+      request.get(`${base}new`, (err, res, body) => {
+        expect(err).toBeNull();
+        expect(body).toContain("New Restroom Information");
+        done();
+      })
+    })
+  })
+
 });
