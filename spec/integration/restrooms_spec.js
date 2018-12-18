@@ -12,9 +12,9 @@ describe("routes : restrooms", () => {
       Restroom.create({
         title: "Ghirardelli Square",
         address: "900 North Point St, San Francisco, CA 94109",
-        //gender: "All gender",
-        //accessibility: "Wheelchair",
-        //facility: "Sink"
+        gender: "All gender",
+        accessibility: "Wheelchair",
+        facility: "Sink"
       })
       .then((restroom) => {
         this.restroom = restroom;
@@ -35,9 +35,6 @@ describe("routes : restrooms", () => {
         expect(err).toBeNull();
         expect(body).toContain("Nearby Public Restrooms");
         expect(body).toContain("Ghirardelli Square");
-        //expect(body).toContain("All gender");
-        //expect(body).toContain("Wheelchair");
-        //expect(body).toContain("Sink");
         done();
       });
     });
@@ -58,7 +55,10 @@ describe("routes : restrooms", () => {
         url: `${base}create`,
         form: {
           title: "Ghirardelli Square",
-          address: "900 North Point St, San Francisco, CA 94109"
+          address: "900 North Point St, San Francisco, CA 94109",
+          gender: "All gender",
+          accessibility: "Wheelchair",
+          facility: "Sink"
         }
       };
 
@@ -69,6 +69,9 @@ describe("routes : restrooms", () => {
               expect(res.statusCode).toBe(303);
               expect(restroom.title).toBe("Ghirardelli Square");
               expect(restroom.address).toBe("900 North Point St, San Francisco, CA 94109");
+              expect(restroom.gender).toContain("All gender");
+              expect(restroom.accessibility).toContain("Wheelchair");
+              expect(restroom.facility).toContain("Sink");
               done();
             })
             .catch((err) => {
@@ -130,7 +133,10 @@ describe("routes : restrooms", () => {
           url: `${base}${this.restroom.id}/update`,
           form: {
             title: "Ghirardelli Chocolate",
-            description: "900 North Point St, San Francisco, CA 94109"
+            address: "900 North Point St, San Francisco, CA 94109",
+            gender: "All gender",
+            accessibility: "Wheelchair",
+            facility: "Sink"
           }
         };
         request.post(options,(err, res, body) => {

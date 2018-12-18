@@ -10,6 +10,10 @@
       <h1><%= restroom.title %></h1>
 
       <p><%= restroom.address %></p>
+      <!--Need to find a way to display those values from checkbox inputs
+      <p><%= restroom.gender %></p>
+      <p><%= restroom.accessibility %></p>
+      <p><%= restroom.facility %></p>-->
 
       <a href="/restrooms/<%= restroom.id %>/edit" class="btn btn-warning">Edit</a>
       <form style="display:initial" action="/restrooms/<%= restroom.id %>/destroy" method="post">
