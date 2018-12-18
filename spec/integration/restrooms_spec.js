@@ -11,7 +11,7 @@ describe("routes : restrooms", () => {
     sequelize.sync({force: true}).then((res) => {
       Restroom.create({
         title: "Ghirardelli Square",
-        //address: "900 North Point St, San Francisco, CA 94109",
+        address: "900 North Point St, San Francisco, CA 94109",
         //gender: "All gender",
         //accessibility: "Wheelchair",
         //facility: "Sink"
@@ -33,8 +33,8 @@ describe("routes : restrooms", () => {
       request.get(base, (err, res, body) => {
         expect(res.statusCode).toBe(200);
         expect(err).toBeNull();
+        expect(body).toContain("Nearby Public Restrooms");
         expect(body).toContain("Ghirardelli Square");
-        //expect(body).toContain("900 North Point St, San Francisco, CA 94109");
         //expect(body).toContain("All gender");
         //expect(body).toContain("Wheelchair");
         //expect(body).toContain("Sink");
@@ -58,7 +58,7 @@ describe("routes : restrooms", () => {
         url: `${base}create`,
         form: {
           title: "Ghirardelli Square",
-          address: "North Point St, San Francisco, CA"
+          address: "900 North Point St, San Francisco, CA 94109"
         }
       };
 
@@ -68,7 +68,7 @@ describe("routes : restrooms", () => {
             .then((restroom) => {
               expect(res.statusCode).toBe(303);
               expect(restroom.title).toBe("Ghirardelli Square");
-              expect(restroom.address).toBe("North Point St, San Francisco, CA");
+              expect(restroom.address).toBe("900 North Point St, San Francisco, CA 94109");
               done();
             })
             .catch((err) => {
@@ -77,6 +77,72 @@ describe("routes : restrooms", () => {
             });
           }
         );
+      });
+    });
+
+    describe("GET /restrooms/:id", () => {
+
+     it("should render a view with the selected restroom information", (done) => {
+       request.get(`${base}${this.restroom.id}`, (err, res, body) => {
+         expect(err).toBeNull();
+         expect(body).toContain("Ghirardelli Square");
+         done();
+       });
+     });
+   });
+
+   describe("POST /restrooms/:id/destroy", () => {
+
+     it("should delete the restroom information with the associated ID", (done) => {
+       Restroom.all()
+       .then((restrooms) => {
+         const restroomCountBeforeDelete = restrooms.length;
+
+         expect(restroomCountBeforeDelete).toBe(1);
+         request.post(`${base}${this.restroom.id}/destroy`, (err, res, body) => {
+           Restroom.all()
+           .then((restrooms) => {
+             expect(err).toBeNull();
+             expect(restrooms.length).toBe(restroomCountBeforeDelete - 1);
+             done();
+           })
+         });
+       });
+     });
+   });
+
+   describe("GET /restrooms/:id/edit", () => {
+
+     it("should render a view with an edit restroom information form", (done) => {
+       request.get(`${base}${this.restroom.id}/edit`, (err, res, body) => {
+         expect(err).toBeNull();
+         expect(body).toContain("Edit Restroom Information");
+         expect(body).toContain("Ghirardelli Square");
+         done();
+       });
+     });
+   });
+
+   describe("POST /restrooms/:id/update", () => {
+
+     it("should update the restroom information with the given values", (done) => {
+       const options = {
+          url: `${base}${this.restroom.id}/update`,
+          form: {
+            title: "Ghirardelli Chocolate",
+            description: "900 North Point St, San Francisco, CA 94109"
+          }
+        };
+        request.post(options,(err, res, body) => {
+          expect(err).toBeNull();
+          Restroom.findOne({
+            where: { id: this.restroom.id }
+          })
+          .then((restroom) => {
+            expect(restroom.title).toBe("Ghirardelli Chocolate");
+            done();
+          });
+        });
       });
     });
 
