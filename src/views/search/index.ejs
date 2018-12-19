@@ -2,16 +2,83 @@
 <html>
   <head>
     <% include ../static/partials/head.ejs %>
+    <style>
+      #map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
   </head>
+
   <body>
     <main class="container">
       <% include ../static/partials/navbar.ejs %>
 
       <h1>Search on Map</h1>
 
+      <div id="map"></div>
+
+      <script>
+        function initMap() {
+          var options = {
+            zoom: 13,
+            center: {lat: 37.7916, lng: -122.4276}
+          }
+          var map = new google.maps.Map(document.getElementById('map'), options);
+
+          google.maps.event.addListener(map, 'click', function(event){
+            addMarker({coords:event.latLng});
+          })
+
+          var markers = [
+            {
+              coords: {lat: 37.8059, lng: -122.4230},
+              content: '<h4>Ghirardelli Square</h4><p>900 North Point St San Francisco, CA 94109</p>'
+            },
+            {
+              coords: {lat: 37.7956, lng: -122.3933},
+              content: '<h4>Ferry Building</h4><p>1 The Embarcadero San Francisco, CA 94105</p>'
+            },
+            {
+              coords: {lat: 37.8087, lng: -122.4098},
+              content: '<h4>Pier 39</h4><p>The Embarcadero San Francisco CA, 94133</p>'
+            }
+          ]
+
+          for (let i = 0; i < markers.length; i++){
+            addMarker(markers[i]);
+          }
 
 
+          function addMarker(props){
+            var marker = new google.maps.Marker({
+              position: props.coords,
+              map: map
+            });
+
+            if(props.content){
+              var infoWindow = new google.maps.InfoWindow({
+                content: props.content
+              });
+
+              marker.addListener('click', function(){
+                infoWindow.open(map, marker);
+              });
+            }
+          }
+        }
+
+      </script>
     </main>
     <% include ../static/partials/baseScripts.ejs %>
+
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key (which is not needed for this tutorial)
+    * The callback parameter executes the initMap() function
+    -->
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.googleMapsApi %>&callback=initMap">
+    </script>
   </body>
 </html>
