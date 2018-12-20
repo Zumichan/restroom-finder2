@@ -14,7 +14,10 @@ module.exports = {
   addRestroom(newRestroom, callback){
     return Restroom.create({
       title: newRestroom.title,
-      address: newRestroom.address
+      address: newRestroom.address,
+      gender: newRestroom.gender,
+      accessibility: newRestroom.accessibility,
+      facility: newRestroom.facility
     })
     .then((restroom) => {
       callback(null, restroom);

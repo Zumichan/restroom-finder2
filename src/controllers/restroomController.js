@@ -17,7 +17,10 @@ module.exports = {
   create(req, res, next){
      let newRestroom = {
        title: req.body.title,
-       address: req.body.address
+       address: req.body.address,
+       gender: req.body.gender,
+       accessibility: req.body.accessibility,
+       facility: req.body.facility
      };
      restroomQueries.addRestroom(newRestroom, (err, restroom) => {
        if(err){
