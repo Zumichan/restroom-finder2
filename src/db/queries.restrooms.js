@@ -1,4 +1,5 @@
 const Restroom = require("./models").Restroom;
+const Authorizer = require("../policies/application");
 
 module.exports = {
   getAllRestrooms(callback){
@@ -42,21 +43,45 @@ module.exports = {
        callback(err);
      })
    },
-   updateRestroom(id, updatedRestroom, callback){
-     return Restroom.findByPk(id)
+   deleteRestroom(req, callback){
+     return Restroom.findById(req.params.id)
+     .then((restroom) => {
+       const authorized = new Authorizer(req.user, restroom).destroy();
+       if(authorized) {
+         restroom.destroy()
+         .then((res) => {
+           callback(null, restroom);
+         });
+       } else {
+         req.flash("notice", "You are not authorized to do that.")
+         callback(401);
+       }
+     })
+     .catch((err) => {
+       callback(err);
+     });
+   },
+   updateRestroom(req, updatedRestroom, callback){
+     return Restroom.findById(req.params.id)
      .then((restroom) => {
        if(!restroom){
          return callback("Restroom Information not found");
        }
-       restroom.update(updatedRestroom, {
-         fields: Object.keys(updatedRestroom)
-       })
-       .then(() => {
-         callback(null, restroom);
-       })
-       .catch((err) => {
-         callback(err);
-       });
+       const authorized = new Authorizer(req.user, restroom).update();
+       if(authorized) {
+         restroom.update(updatedRestroom, {
+           fields: Object.keys(updatedRestroom)
+         })
+         .then(() => {
+           callback(null, restroom);
+         })
+         .catch((err) => {
+           callback(err);
+         });
+       } else {
+         req.flash("notice", "You are not authorized to do that.");
+         callback("Forbidden");
+       }
      });
    }
 }

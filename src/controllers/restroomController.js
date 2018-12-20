@@ -1,4 +1,5 @@
 const restroomQueries = require("../db/queries.restrooms.js")
+const Authorizer = require("../policies/application");
 
 module.exports = {
   index(req, res, next){
@@ -36,9 +37,9 @@ module.exports = {
      });
    },
    destroy(req, res, next){
-     restroomQueries.deleteRestroom(req.params.id, (err, restroom) => {
+     restroomQueries.deleteRestroom(req, (err, restroom) => {
        if(err){
-         res.redirect(500, `/restrooms/${restroom.id}`)
+         res.redirect(err, `/restrooms/${req.params.id}`)
        } else {
          res.redirect(303, "/restrooms")
        }
@@ -49,16 +50,22 @@ module.exports = {
        if(err || restroom == null){
          res.redirect(404, "/");
        } else {
-         res.render("restrooms/edit", {restroom});
+         const authorized = new Authorizer(req.user, restroom).edit();
+         if(authorized){
+           res.render("restrooms/edit", {restroom});
+         } else {
+           req.flash("You are not authorized to do that.")
+           res.redirect(`/restrooms/${req.params.id}`)
+         }
        }
      });
    },
    update(req, res, next){
-     restroomQueries.updateRestroom(req.params.id, req.body, (err, restroom) => {
+     restroomQueries.updateRestroom(req, req.body, (err, restroom) => {
        if(err || restroom == null){
-         res.redirect(404, `/restrooms/${req.params.id}/edit`);
+         res.redirect(401, `/restrooms/${req.params.id}/edit`);
        } else {
-         res.redirect(`/restrooms/${restroom.id}`);
+         res.redirect(`/restrooms/${req.params.id}`);
        }
      });
    }
