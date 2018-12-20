@@ -8,10 +8,10 @@
 
     <main class="container">
       <h1><%= restroom.title %></h1>
-      <p><%= restroom.address %></p>
-      <p><%= restroom.gender %></p>
-      <p><%= restroom.accessibility %></p>
-      <p><%= restroom.facility %></p>
+      <p>Address: <%= restroom.address %></p>
+      <p>Gender: <%= restroom.gender %></p>
+      <p>Accessibility: <%= restroom.accessibility %></p>
+      <p>Facility: <%= restroom.facility %></p>
 
       <% if(currentUser && currentUser.isAdmin()) { %>
       <a href="/restrooms/<%= restroom.id %>/edit" class="btn btn-warning">Edit</a>
