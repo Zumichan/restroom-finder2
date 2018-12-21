@@ -13,7 +13,7 @@ describe("routes : restrooms", () => {
       Restroom.create({
         title: "Ghirardelli Square",
         address: "900 North Point St, San Francisco, CA 94109",
-        gender: "All gender",
+        allgender: "allgender",
         accessibility: "Wheelchair",
         facility: "Sink"
       })
@@ -80,7 +80,7 @@ describe("routes : restrooms", () => {
         form: {
           title: "Ghirardelli Square",
           address: "900 North Point St, San Francisco, CA 94109",
-          gender: "All gender",
+          allgender: "allgender",
           accessibility: "Wheelchair",
           facility: "Sink"
         }
@@ -93,7 +93,7 @@ describe("routes : restrooms", () => {
               expect(res.statusCode).toBe(303);
               expect(restroom.title).toBe("Ghirardelli Square");
               expect(restroom.address).toBe("900 North Point St, San Francisco, CA 94109");
-              expect(restroom.gender).toContain("All gender");
+              expect(restroom.allgender).toContain("allgender");
               expect(restroom.accessibility).toContain("Wheelchair");
               expect(restroom.facility).toContain("Sink");
               done();
@@ -157,7 +157,7 @@ describe("routes : restrooms", () => {
           form: {
             title: "Ghirardelli Chocolate",
             address: "900 North Point St, San Francisco, CA 94109",
-            gender: "All gender",
+            allgender: "allgender",
             accessibility: "Wheelchair",
             facility: "Sink"
           }
@@ -220,7 +220,7 @@ describe("routes : restrooms", () => {
         form: {
           title: "Ghirardelli Square",
           address: "900 North Point St, San Francisco, CA 94109",
-          gender: "All gender",
+          allgender: "allgender",
           accessibility: "Wheelchair",
           facility: "Sink"
         }
@@ -233,7 +233,7 @@ describe("routes : restrooms", () => {
               expect(res.statusCode).toBe(303);
               expect(restroom.title).toBe("Ghirardelli Square");
               expect(restroom.address).toBe("900 North Point St, San Francisco, CA 94109");
-              expect(restroom.gender).toContain("All gender");
+              expect(restroom.allgender).toContain("allgender");
               expect(restroom.accessibility).toContain("Wheelchair");
               expect(restroom.facility).toContain("Sink");
               done();
@@ -295,7 +295,7 @@ describe("routes : restrooms", () => {
             form: {
               title: "Ghirardelli Chocolate",
               address: "900 North Point St, San Francisco, CA 94109",
-              gender: "All gender",
+              allgender: "allgender",
               accessibility: "Wheelchair",
               facility: "Sink"
             }
