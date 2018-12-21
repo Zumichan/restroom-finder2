@@ -10,13 +10,13 @@
       <h1><%= restroom.title %></h1>
       <p>Address: <%= restroom.address %></p>
       <p>Gender:
-        <% if(restroom.male) { %>
+        <% if(restroom.men) { %>
           <span class="flaticon-man-1"></span>
-          <%= restroom.male %>
+          <%= restroom.men %>
         <% } %>
-        <% if(restroom.female) { %>
+        <% if(restroom.women) { %>
           <span class="flaticon-woman"></span>
-          <%= restroom.female %>
+          <%= restroom.women %>
         <% } %>
         <% if(restroom.allgender) { %>
           <span class="flaticon-man"></span>

@@ -15,8 +15,8 @@ module.exports = {
     return Restroom.create({
       title: newRestroom.title,
       address: newRestroom.address,
-      male: newRestroom.male,
-      female: newRestroom.female,
+      men: newRestroom.men,
+      women: newRestroom.women,
       allgender: newRestroom.allgender,
       accessibility: newRestroom.accessibility,
       facility: newRestroom.facility

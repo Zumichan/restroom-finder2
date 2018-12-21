@@ -14,10 +14,10 @@ module.exports = {
       address: {
         type: Sequelize.STRING
       },
-      male: {
+      men: {
         type: Sequelize.STRING
       },
-      female: {
+      women: {
         type: Sequelize.STRING
       },
       allgender: {

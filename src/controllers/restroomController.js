@@ -18,8 +18,8 @@ module.exports = {
      let newRestroom = {
        title: req.body.title,
        address: req.body.address,
-       male: req.body.male,
-       female: req.body.female,
+       men: req.body.men,
+       women: req.body.women,
        allgender: req.body.allgender,
        accessibility: req.body.accessibility,
        facility: req.body.facility
