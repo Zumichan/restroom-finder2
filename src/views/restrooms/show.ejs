@@ -9,9 +9,32 @@
     <main class="container">
       <h1><%= restroom.title %></h1>
       <p>Address: <%= restroom.address %></p>
-      <p>Gender: <%= restroom.male %> <%= restroom.female %> <%= restroom.allgender %></p>
-      <p>Accessibility: <%= restroom.accessibility %></p>
-      <p>Facility: <%= restroom.facility %></p>
+      <p>Gender:
+        <% if(restroom.male) { %>
+          <span class="flaticon-man-1"></span>
+          <%= restroom.male %>
+        <% } %>
+        <% if(restroom.female) { %>
+          <span class="flaticon-woman"></span>
+          <%= restroom.female %>
+        <% } %>
+        <% if(restroom.allgender) { %>
+          <span class="flaticon-man"></span>
+          <%= restroom.allgender %>
+        <% } %>
+      </p>
+      <p>Accessibility:
+        <% if(restroom.accessibility) { %>
+          <span class="flaticon-wheelchair"></span>
+          <%= restroom.accessibility %>
+        <% } %>
+      </p>
+      <p>Facility:
+        <% if(restroom.facility) { %>
+          <span class="flaticon-child"></span>
+          <%= restroom.facility %>
+        <% } %>
+      </p>
 
       <% if(currentUser && currentUser.isAdmin()) { %>
       <a href="/restrooms/<%= restroom.id %>/edit" class="btn btn-warning">Edit</a>
