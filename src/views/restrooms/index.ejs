@@ -7,11 +7,15 @@
     <main class="container">
       <% include ../static/partials/navbar.ejs %>
 
-      <h1>Nearby Public Restrooms</h1>
+      <h2>Nearby Public Restrooms</h2>
 
       <a href="/restrooms/new" class="btn btn-success">New Restroom Information</a>
 
       <br>
+      <br>
+
+      <% include ../search/index.ejs %>
+
       <br>
 
       <ul class="list-group">
@@ -26,5 +30,13 @@
 
     </main>
     <% include ../static/partials/baseScripts.ejs %>
+    <footer class="page-footer font-small blue pt-4">
+      <div class="footer-copyright text-center py-3">© 2018 Restroom Finder  Icons by
+      <a href="https://icons8.com/icon/7562/toilet-bowl">Icons8</a>,
+      <a href="http://creativecommons.org/licenses/by/3.0/">CC</a>,
+      <a data-file="002-man" href="https://www.flaticon.com/authors/ocha">OCHA</a>,
+      <a data-file="005-wheelchair" href="http://www.freepik.com">Freepik</a>
+      </div>
+    </footer>
   </body>
 </html>
