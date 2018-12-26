@@ -7,71 +7,147 @@
         height: 400px;
         width: 100%;
       }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
     </style>
   </head>
 
   <body>
     <main class="container">
-      
+
       <% include ../static/partials/navbar.ejs %>
 
+      <input id="pac-input" class="controls" type="text" placeholder="Search Box">
       <div id="map"></div>
 
       <script>
-        function initMap() {
-          var options = {
-            zoom: 13,
-            center: {lat: 37.7916, lng: -122.4276}
-          }
-          var map = new google.maps.Map(document.getElementById('map'), options);
 
-          google.maps.event.addListener(map, 'click', function(event){
+      function initAutocomplete() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 37.7916, lng: -122.4276},
+          zoom: 13,
+          mapTypeId: 'roadmap'
+        });
+
+        // Create the search box and link it to the UI element.
+        var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        // Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function() {
+          searchBox.setBounds(map.getBounds());
+        });
+
+        var markers = [];
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+          // Clear out the old markers.
+          markers.forEach(function(marker) {
+            marker.setMap(null);
+          });
+          markers = [];
+
+          // For each place, get the icon, name and location.
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            var icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            // Create a marker for each place.
+            markers.push(new google.maps.Marker({
+              map: map,
+              icon: icon,
+              title: place.name,
+              position: place.geometry.location
+            }));
+
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          map.fitBounds(bounds);
+        });//End of searchBox.addListener
+
+        //To adding a marker on the map. This marker will not be stored in a DB yet.
+        google.maps.event.addListener(map, 'click', function(event){
             addMarker({coords:event.latLng});
           })
 
-          var markers = [
-            {
-              coords: {lat: 37.8059, lng: -122.4230},
-              content: '<h4>Ghirardelli Square</h4><p>900 North Point St San Francisco, CA 94109</p><span class="flaticon-man-1"></span><span class="flaticon-woman"></span><span class="flaticon-wheelchair"></span><span class="flaticon-child"></span>'
-            },
-            {
-              coords: {lat: 37.7956, lng: -122.3933},
-              content: '<h4>Ferry Building</h4><p>1 The Embarcadero San Francisco, CA 94105</p><span class="flaticon-man-1"></span><span class="flaticon-woman"></span><span class="flaticon-wheelchair"></span><span class="flaticon-child"></span>'
-            },
-            {
-              coords: {lat: 37.8087, lng: -122.4098},
-              content: '<h4>Pier 39</h4><p>The Embarcadero San Francisco, CA 94133</p><span class="flaticon-man-1"></span><span class="flaticon-woman"></span><span class="flaticon-child"></span>'
-            },
-            {
-              coords: {lat: 37.8080, lng: -122.4177},
-              content: '<h4>Fisherman\'s Wharf</h4><p>Taylor St San Francisco, CA 94133</p><span class="flaticon-man-1"></span><span class="flaticon-woman"></span>'
-            }
-          ]
-
-          for (let i = 0; i < markers.length; i++){
-            addMarker(markers[i]);
+        var presetMarkers = [
+          {
+            coords: {lat: 37.8059, lng: -122.4230},
+            content: '<h4>Ghirardelli Square</h4><p>900 North Point St San Francisco, CA 94109</p><span class="flaticon-man-1"></span><span class="flaticon-woman"></span><span class="flaticon-wheelchair"></span><span class="flaticon-child"></span>'
+          },
+          {
+            coords: {lat: 37.7956, lng: -122.3933},
+            content: '<h4>Ferry Building</h4><p>1 The Embarcadero San Francisco, CA 94105</p><span class="flaticon-man-1"></span><span class="flaticon-woman"></span><span class="flaticon-wheelchair"></span><span class="flaticon-child"></span>'
+          },
+          {
+            coords: {lat: 37.8087, lng: -122.4098},
+            content: '<h4>Pier 39</h4><p>The Embarcadero San Francisco, CA 94133</p><span class="flaticon-man-1"></span><span class="flaticon-woman"></span><span class="flaticon-child"></span>'
+          },
+          {
+            coords: {lat: 37.8080, lng: -122.4177},
+            content: '<h4>Fisherman\'s Wharf</h4><p>Taylor St San Francisco, CA 94133</p><span class="flaticon-man-1"></span><span class="flaticon-woman"></span>'
           }
+        ]
 
+        for (let i = 0; i < presetMarkers.length; i++){
+          addMarker(presetMarkers[i]);
+        }
 
-          function addMarker(props){
-            var marker = new google.maps.Marker({
-              position: props.coords,
-              map: map
+        function addMarker(props){
+          var presetMarker = new google.maps.Marker({
+            position: props.coords,
+            map: map
+          });
+          if(props.content){
+            var infoWindow = new google.maps.InfoWindow({
+              content: props.content
             });
-
-            if(props.content){
-              var infoWindow = new google.maps.InfoWindow({
-                content: props.content
-              });
-
-              marker.addListener('click', function(){
-                infoWindow.open(map, marker);
-              });
-            }
+            presetMarker.addListener('click', function(){
+              infoWindow.open(map, presetMarker);
+            });
           }
         }
 
-      </script>
+      }
+
+    </script>
     </main>
     <% include ../static/partials/baseScripts.ejs %>
 
@@ -80,8 +156,6 @@
     * The key parameter will contain your own API key (which is not needed for this tutorial)
     * The callback parameter executes the initMap() function
     -->
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.googleMapsApi %>&callback=initMap">
-    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.googlePlacesApi %>&libraries=places&callback=initAutocomplete" async defer></script>
   </body>
 </html>
